@@ -381,9 +381,12 @@ end
 command.add(function()
   local v = core.active_view
   if v:is(PreviewView) then return true, v.doc end
-  return v:is(DocView) and v.doc.filename ~= nil or v:is(DocView), v.doc
-end, {
-  ["mdpreview:toggle"] = function(doc)
+  if not v:is(DocView) then return false end
+  local name = (v.doc.filename or ""):lower()
+  local md = name:match("%.md$") or name:match("%.markdown$") or name:match("%.mdx$") or name:match("%.mkd$")
+  return md ~= nil, v.doc
+end, (function()
+  local function toggle(doc)
     local existing = find_preview(doc)
     if existing then
       existing.node = core.root_view.root_node:get_node_for_view(existing)
@@ -392,9 +395,12 @@ end, {
     end
     local view = PreviewView(doc)
     core.root_view:get_active_node_default():split("right", view)
-  end,
-})
+  end
+  -- second name so that typing "markdown" in the command palette finds it
+  return { ["mdpreview:toggle"] = toggle, ["markdown:preview-toggle"] = toggle }
+end)())
 
 keymap.add { ["ctrl+shift+m"] = "mdpreview:toggle", ["alt+m"] = "mdpreview:toggle" }
 
-return PreviewView
+-- not returned: the workspace plugin would try to restore the view as `require(module)()` without a document
+return true
