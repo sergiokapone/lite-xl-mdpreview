@@ -11,7 +11,14 @@ bullet / numbered lists, block quotes, horizontal rules, simple tables and
 clickable links (`http(s)` open in the browser, relative `.md` files open in the
 editor, other files in the default program). YAML front matter is skipped.
 
-Not supported: images (shown as an `[img: alt]` link), math, raw HTML.
+**LaTeX math** (`$..$`, `$$..$$`, `\(..\)`, `\[..\]`) is approximated: Greek letters and
+symbols become Unicode, fractions `a/b`, roots `√x`, matrices in brackets, and
+super/subscripts are drawn as smaller raised/lowered text. For exact output run
+**`Markdown: Open in Browser`** (`Ctrl+Alt+M`): it converts the file with
+[pandoc](https://pandoc.org) and opens it with MathJax (needs pandoc in `PATH`, or set
+`config.plugins.mdpreview.pandoc`, and internet access for MathJax).
+
+Not supported: images (shown as an `[img: alt]` link), raw HTML.
 
 ## Install
 
